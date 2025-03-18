@@ -33,8 +33,22 @@ app.post("/webflow-to-sellsy", async (req, res) => {
 
         console.log("📤 Envoi des données à Sellsy :", contactData);
 
-        // Appel API Sellsy
-        const response = await axios.post("https://api.sellsy.com/v2/contacts", contactData, {
+        // 🔍 Vérification des tokens avant envoi à Sellsy
+        console.log("🔍 DEBUG : Vérification des tokens Sellsy avant l'appel API");
+        console.log("SELLSY_TOKEN:", process.env.SELLSY_TOKEN);
+        console.log("SELLSY_TOKEN_SECRET:", process.env.SELLSY_TOKEN_SECRET);
+
+        // Appel API Sellsy avec format correct
+        const response = await axios.post("https://api.sellsy.com/v2/contacts", 
+        {
+            data: {
+                name: contactData.name,
+                email: contactData.email,
+                phone: contactData.phone,
+                company: contactData.company
+            }
+        }, 
+        {
             headers: {
                 "Authorization": `Bearer ${process.env.SELLSY_TOKEN}`,
                 "Content-Type": "application/json"
